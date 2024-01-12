@@ -59,7 +59,40 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+  //here we will be writing the script to firstly make the icon bigger, draw a yellow border, in 0.07 seconds
+  //we will also play a sound
+  //keycode.info to find the number associated with a key on the keyboard pressed
+  //data-key : data attributes hooks the key up with the sounds
+  // we listen for the key down event
 
+  function playSound(e) {
+    //now we figure out if there's an audio element on the page that a data-key of say 65
+    //use an attribute selector
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+    //now we add in the key associated with it since we want the animation
+    const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+
+    if (!audio) return; // stop the function from running all together
+    audio.currentTime = 0; // rewind to zero if the key is pressed over and over
+    audio.play();
+    //const audio = document.querySelectorAll();
+    key.classList.add('playing'); //same as jQuery key.addClass('playing')
+    //now we have to remove it to reset it , we could add a timeout function
+    //but rather use a transition end event
+    //listen on each key to when each transition ends
+    console.log(key);
+  }
+
+  function removeTransition(e){
+    if(e.propertyName !== 'transform') return; // skip it if its not a transform
+    this.classList.remove('playing');
+    //console.log(e.propertyName);
+  }
+  const keys = document.querySelectorAll('.key');
+  //listen on transition end
+  //we have to loop over every single element and attach an event
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+  window.addEventListener('keydown',playSound);
 </script>
 
 
